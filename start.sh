@@ -1,3 +1,4 @@
+#!/bin/sh
 # Scrape the JSON
 phantomjs pjscrape.js ltc_scraper.js
 # Run the python parser
