@@ -7,11 +7,12 @@ import btceapi
 import btcebot
 
 class CryptoTrader(btcebot.TraderBase):
-    def __init__(self, api, pair, action, live_trades = False):
+    def __init__(self, api, pair, action, logger, live_trades = False):
         btcebot.TraderBase.__init__(self, (pair,))
         self.api = api
         self.action = action
         self.pair = pair
+        self.logger = logger
         self.live_trades = live_trades
         
         self.current_lowest_ask = None
@@ -32,15 +33,17 @@ class CryptoTrader(btcebot.TraderBase):
         max_buy = available / price
         buy_amount = min(max_buy, amount) * self.fee_adjustment
         if buy_amount >= btceapi.min_orders[self.pair]:
-            print "attempting to buy %s %s at %s for %s %s" % (buy_amount, 
-                curr1.upper(), price, buy_amount*price, curr2.upper())
+            self.logger("attempting to buy %s %s at %s for %s %s" % (buy_amount, 
+                curr1.upper(), price, buy_amount*price, curr2.upper()))
             if self.live_trades:
                 r = self.api.trade(self.pair, "buy", price, buy_amount, conn)
-                print "\tReceived %s %s" % (r.received, curr1.upper())
+                self.logger("\tReceived %s %s" % (r.received, curr1.upper()))
                 # If the order didn't fill completely, cancel the remaining order
                 if r.order_id != 0:
-                    print "\tCanceling unfilled portion of order"
+                    self.logger("\tCanceling unfilled portion of order")
                     self.api.cancelOrder(r.order_id, conn)
+        else:
+            self.logger("Balance less than minimum trade amount")
 
     def _attemptSell(self, price, amount):
         conn = btceapi.BTCEConnection()
@@ -51,15 +54,17 @@ class CryptoTrader(btcebot.TraderBase):
         available = getattr(info, "balance_" + curr1)
         sell_amount = min(available, amount) * self.fee_adjustment
         if sell_amount >= btceapi.min_orders[self.pair]:
-            print "attempting to sell %s %s at %s for %s %s" % (sell_amount,
-                curr1.upper(), price, sell_amount*price, curr2.upper())
+            self.logger("attempting to sell %s %s at %s for %s %s" % (sell_amount,
+                curr1.upper(), price, sell_amount*price, curr2.upper()))
             if self.live_trades:
                 r = self.api.trade(self.pair, "sell", price, sell_amount, conn)
-                print "\tReceived %s %s" % (r.received, curr2.upper())
+                self.logger("\tReceived %s %s" % (r.received, curr2.upper()))
                 # If the order didn't fill completely, cancel the remaining order
                 if r.order_id != 0:
-                    print "\tCanceling unfilled portion of order"
+                    self.logger("\tCanceling unfilled portion of order")
                     self.api.cancelOrder(r.order_id, conn)
+        else:
+            self.logger("Balance less than minimum trade amount")
 
     def getBal(self, curr):
         conn = btceapi.BTCEConnection()
