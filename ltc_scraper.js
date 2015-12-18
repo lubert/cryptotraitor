@@ -6,7 +6,7 @@ pjs.config({
 });
 
 pjs.addSuite({
-    url: "https://cryptotrader.org/traders/ZmguD4XzNospfqfJc",
+    url: "https://cryptotrader.org/live/RTmwsY4qEzi4KjybD",
     ready: function() {
 	return $('#orders table tr').length > 0;
     },
@@ -25,4 +25,3 @@ pjs.addSuite({
 	}).get();
     }
 });
-
