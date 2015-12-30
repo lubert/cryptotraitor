@@ -6,7 +6,7 @@ pjs.config({
 });
 
 pjs.addSuite({
-    url: "https://cryptotrader.org/live/RTmwsY4qEzi4KjybD",
+    url: "", // i.e. https://cryptotrader.org/live/<hash>
     ready: function() {
 	return $('#orders table tr').length > 0;
     },
