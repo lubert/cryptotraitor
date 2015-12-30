@@ -134,7 +134,7 @@ def main():
     logging.debug("Last order action: " + action + " @ " + price)
     
     # Test send an email
-    if (now - time) <= timedelta(hours = 2):
+    if (now - time) <= timedelta(minutes = TRADE_THRESHOLD):
         logging.debug("Ready to " + action)
         try:
             createOrder(action)

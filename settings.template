@@ -1,7 +1,12 @@
-EMAIL_USER =
-EMAIL_PASSWORD =
-EMAIL_RECIPIENT =
-BTCE_KEY_FILE = "keys.txt"
+EMAIL_USER = ""
+EMAIL_PASSWORD = ""
+EMAIL_RECIPIENT = ""
+
+BTCE_KEY = ""
+BTCE_SECRET = ""
+
 JSON_FILE = "scrape_output.json"
 ORDERS_FILE = "orders.log"
+
 LIVE_TRADING = False
+TRADE_THRESHOLD = 30 # in minutes
