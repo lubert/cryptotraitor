@@ -112,6 +112,7 @@ def main():
     try:
         check_data(data)
     except AssertionError:
+        logging.debug("Data error! Sending email...")
         sendemail('Cryptotraitor ERROR', 'Unexpected data, check scrape_output.json')
         return
     
