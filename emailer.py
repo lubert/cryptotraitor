@@ -1,4 +1,6 @@
 import smtplib
+import logging
+
 from settings import *
 
 def sendemail(subject, message):
