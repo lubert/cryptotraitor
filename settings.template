@@ -1,0 +1,7 @@
+EMAIL_USER =
+EMAIL_PASSWORD =
+EMAIL_RECIPIENT =
+BTCE_KEY_FILE = "keys.txt"
+JSON_FILE = "scrape_output.json"
+ORDERS_FILE = "orders.log"
+LIVE_TRADING = False

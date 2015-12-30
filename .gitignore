@@ -4,3 +4,5 @@
 *keys.txt
 scrape_output.*
 *.pyc
+*.log
+settings.py

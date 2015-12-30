@@ -5,16 +5,10 @@ import sys
 import btceapi
 import btcebot
 import orderbot
-import smtplib
 from datetime import datetime, timedelta
 from dateutil import parser
-
-# Globals
-JSON_FILE = 'scrape_output.json'
-ORDERS_FILE = 'orders.log'
-KEY_FILE = 'keys.txt'
-EMAIL_KEY_FILE = 'email_keys.txt'
-LIVE_TRADING = True
+from settings import *
+from emailer import sendemail
 
 # Init logging
 def init_logging():
@@ -51,6 +45,9 @@ def check_data(data):
     assert col_array[1] == "Amount", "Expected 'Amount': %r" % col_array[1]
     assert col_array[2] == "Price", "Expected 'Price': %r" % col_array[2]
     assert col_array[3] == "At", "Expected 'At': %r" % col_array[3]
+    row = data[1]
+    assert len(col_array) == len(row), "Unexpected array length: %r" % len(row)
+        
 
 def onBotError(msg, tracebackText):
     tstr = time.strftime("%Y/%m/%d %H:%M:%S")
@@ -58,34 +55,9 @@ def onBotError(msg, tracebackText):
     open("error.log", "a").write(
         "%s - %s\n%s\n%s\n" % (tstr, msg, tracebackText, "-"*80))
 
-def sendemail(subject, message):
-    # Credentials
-    file = open(EMAIL_KEY_FILE, 'r')
-    from_addr = username = file.readline().strip()
-    password = file.readline().strip()
-    to_addr = file.readline().strip()
-    file.close()
-
-    header  = 'From: %s\n' % from_addr
-    header += 'To: %s\n' % to_addr
-    header += 'Subject: %s\n\n' % subject
-    message = header + message
- 
-    server = smtplib.SMTP('smtp.gmail.com:587')
-    server.starttls()
-    server.login(username,password)
-    problems = server.sendmail(from_addr, to_addr, message)
-    server.quit()
-    if problems:
-        logging.debug("Error: " + str(problems))
-        return False
-    else:
-        logging.debug("Email sent!")
-        return True
-
 def createOrder(action):
     # Load keys and create an API object from the first one
-    handler = btceapi.KeyHandler(KEY_FILE)
+    handler = btceapi.KeyHandler(BTCE_KEY_FILE)
     key = handler.getKeys()[0]
     if LIVE_TRADING:
         logging.debug("**LIVE TRADING**")
@@ -136,7 +108,12 @@ def main():
     logging.debug("Starting at: " + datetime.now().strftime("%c"))
 
     data = load_json(JSON_FILE)
-    check_data(data)
+
+    try:
+        check_data(data)
+    except AssertionError:
+        sendemail('Cryptotraitor ERROR', 'Unexpected data, check scrape_output.json')
+        return
     
     last_order = data[-1]
     action = last_order[0]
