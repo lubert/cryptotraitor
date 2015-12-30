@@ -66,8 +66,8 @@ def createOrder(action):
     logging.debug("Trading with key %s" % key)
     api = btceapi.TradeAPI(key, handler)
 
-    # Create a trader that handles LTC/USD trades in the given range.
-    trader = orderbot.CryptoTrader(api, "ltc_usd", action, logging.debug, LIVE_TRADING)
+    # Create a trader that handles BTC/USD trades in the given range.
+    trader = orderbot.CryptoTrader(api, "btc_usd", action, logging.debug, LIVE_TRADING)
 
     # Create a bot and add the trader to it.
     bot = btcebot.Bot()
@@ -82,7 +82,7 @@ def createOrder(action):
     print "Running; press Ctrl-C to stop"
 
     if action == "SELL":
-        curr = "ltc"
+        curr = "btc"
     elif action == "BUY":
         curr = "usd"
 
@@ -90,9 +90,9 @@ def createOrder(action):
         while 1:
             bal = trader.getBal(curr)
             logging.debug("Balance is %s " % bal + curr.upper())
-            if bal < btceapi.min_orders['ltc_usd']:
+            if bal < btceapi.min_orders['btc_usd']:
                 logging.debug(action + " complete!")
-                sendemail('Cryptotraitor order - ' + action, 'LTC: ' + str(trader.getBal('ltc'))
+                sendemail('Cryptotraitor order - ' + action, 'BTC: ' + str(trader.getBal('btc'))
                           + '\nUSD: ' + str(trader.getBal('usd')))
                 bot.stop()
                 break
