@@ -112,7 +112,7 @@ def main():
     try:
         check_data(data)
     except AssertionError:
-        logging.debug("Data error! Sending email...")
+        logging.error("Data error! Sending email...")
         sendemail('Cryptotraitor ERROR', 'Unexpected data, check scrape_output.json')
         return
     
@@ -129,7 +129,13 @@ def main():
     # Test send an email
     if (now - time) <= timedelta(hours = 2):
         logging.debug("Ready to " + action)
-        createOrder(action)
+        try:
+            createOrder(action)
+        except:
+            logging.error("Order failed! Sending email...")
+            e = sys.exc_info()[0]
+            sendemail('Cryptotraitor ERROR', e)
+        return            
     else:
         logging.debug('Order stale, exiting...')
     

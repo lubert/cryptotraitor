@@ -22,7 +22,7 @@ def sendemail(subject, message):
     server_ssl.close()
 
     if problems:
-        logging.debug("Error: " + str(problems))
+        logging.error("Error: " + str(problems))
         return False
     else:
         logging.debug("Email sent!")
