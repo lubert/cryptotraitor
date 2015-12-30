@@ -1,12 +1,16 @@
 import json
-import time
 import logging
+import orderbot
+import random
 import sys
+import time
+
 import btceapi
 import btcebot
-import orderbot
+
 from datetime import datetime, timedelta
 from dateutil import parser
+
 from settings import *
 from emailer import sendemail
 
@@ -56,8 +60,11 @@ def onBotError(msg, tracebackText):
         "%s - %s\n%s\n%s\n" % (tstr, msg, tracebackText, "-"*80))
 
 def createOrder(action):
-    # Load keys and create an API object from the first one
-    handler = btceapi.KeyHandler(BTCE_KEY_FILE)
+    # Load keys and create an API object
+    handler = btceapi.KeyHandler()
+    nonce = random.randint(0, 100000000)
+    handler.addKey(BTCE_KEY, BTCE_SECRET, nonce)
+
     key = handler.getKeys()[0]
     if LIVE_TRADING:
         logging.debug("**LIVE TRADING**")
