@@ -120,7 +120,7 @@ def main():
         check_data(data)
     except AssertionError:
         logging.error("Data error! Sending email...")
-        sendemail('Cryptotraitor ERROR', 'Unexpected data, check scrape_output.json')
+        sendemail('Cryptotraitor ERROR', "Unexpected json data:\n%s" % data)
         return
     
     last_order = data[-1]
