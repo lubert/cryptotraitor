@@ -6,4 +6,4 @@ scrape_output.*
 *.pyc
 *.log
 settings.py
-btce_scraper.js
+live_url.conf

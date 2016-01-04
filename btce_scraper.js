@@ -1,3 +1,5 @@
+var fs = require('fs');
+
 pjs.config({ 
     log: 'stdout',
     format: 'json',
@@ -5,8 +7,10 @@ pjs.config({
     outFile: 'scrape_output.json'
 });
 
+var liveUrl = fs.read('live_url.conf');
+
 pjs.addSuite({
-    url: "", // i.e. https://cryptotrader.org/live/<hash>
+    url: liveUrl,
     ready: function() {
 	return $('#orders table tr').length > 0;
     },
